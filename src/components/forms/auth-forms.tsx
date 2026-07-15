@@ -15,6 +15,8 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const defaultEmail = searchParams.get("email") ?? "";
+  const defaultPassword = searchParams.get("password") ?? "";
   return (
     <Card className="glass-card mx-auto w-full max-w-md">
       <CardHeader>
@@ -41,11 +43,11 @@ export function LoginForm() {
         >
           <div className="space-y-2">
             <Label>Email</Label>
-            <Input name="email" type="email" placeholder="nama@email.com" required />
+            <Input name="email" type="email" placeholder="nama@email.com" defaultValue={defaultEmail} required />
           </div>
           <div className="space-y-2">
             <Label>Password</Label>
-            <Input name="password" type="password" required />
+            <Input name="password" type="password" defaultValue={defaultPassword} required />
           </div>
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" /> Ingat saya</label>
@@ -61,7 +63,13 @@ export function LoginForm() {
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const confirmPassword =
+    searchParams.get("confirmPassword") ??
+    searchParams.get("confirmPass") ??
+    searchParams.get("password") ??
+    "";
   return (
     <Card className="glass-card mx-auto w-full max-w-lg">
       <CardHeader>
@@ -94,22 +102,28 @@ export function RegisterForm() {
               setLoading(false);
               return toast.error(result.message ?? "Registrasi gagal. Periksa data Anda.");
             }
-            await signIn("credentials", { email: payload.email, password: payload.password, redirect: false });
+            const loginResult = await signIn("credentials", { email: payload.email, password: payload.password, redirect: false });
+            if (loginResult?.error) {
+              toast.success("Akun berhasil dibuat. Silakan masuk.");
+              router.replace(`/login?email=${encodeURIComponent(String(payload.email))}`);
+              router.refresh();
+              return;
+            }
             router.replace("/dashboard");
             router.refresh();
           }}
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Nama lengkap</Label><Input name="name" required /></div>
-            <div className="space-y-2"><Label>Nomor HP</Label><Input name="phone" required /></div>
+            <div className="space-y-2"><Label>Nama lengkap</Label><Input name="name" defaultValue={searchParams.get("name") ?? ""} required /></div>
+            <div className="space-y-2"><Label>Nomor HP</Label><Input name="phone" defaultValue={searchParams.get("phone") ?? ""} required /></div>
           </div>
-          <div className="space-y-2"><Label>Email</Label><Input name="email" type="email" required /></div>
+          <div className="space-y-2"><Label>Email</Label><Input name="email" type="email" defaultValue={searchParams.get("email") ?? ""} required /></div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Password</Label><Input name="password" type="password" required /></div>
-            <div className="space-y-2"><Label>Confirm password</Label><Input name="confirmPassword" type="password" required /></div>
+            <div className="space-y-2"><Label>Password</Label><Input name="password" type="password" defaultValue={searchParams.get("password") ?? ""} required /></div>
+            <div className="space-y-2"><Label>Confirm password</Label><Input name="confirmPassword" type="password" defaultValue={confirmPassword} required /></div>
           </div>
-          <div className="space-y-2"><Label>Kode referral</Label><Input name="referralCode" placeholder="Opsional" /></div>
-          <label className="flex items-center gap-2 text-sm"><input name="terms" type="checkbox" required /> Saya setuju dengan syarat layanan</label>
+          <div className="space-y-2"><Label>Kode referral</Label><Input name="referralCode" placeholder="Opsional" defaultValue={searchParams.get("referralCode") ?? ""} /></div>
+          <label className="flex items-center gap-2 text-sm"><input name="terms" type="checkbox" defaultChecked={searchParams.get("terms") === "true" || searchParams.get("terms") === "on"} required /> Saya setuju dengan syarat layanan</label>
           <Button className="h-12 bg-rose-500 text-base font-bold shadow-lg shadow-rose-500/20 hover:bg-rose-600" disabled={loading}>
             {loading ? "Menyiapkan akun..." : "Buat Akun Sekarang"}
           </Button>

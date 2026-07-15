@@ -100,7 +100,7 @@ export function LandingPage() {
             <div className="absolute -inset-6 rounded-[2px] bg-red-700/5 blur-3xl" />
             <img
               src="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&w=1200&q=85"
-              alt="Transaksi digital dan pembayaran online"
+              alt="Transaksi digital bilbiling"
               className="relative h-[400px] w-full rounded border object-cover shadow-2xl shadow-black/15"
             />
             <div className="absolute inset-0 rounded border bg-gradient-to-r from-red-700/30 via-transparent to-transparent" />
