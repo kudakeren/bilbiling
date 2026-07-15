@@ -99,7 +99,7 @@ export function LandingPage() {
           <div className="relative bil-float">
             <div className="absolute -inset-6 rounded-[2px] bg-red-700/5 blur-3xl" />
             <img
-              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=85"
+              src="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&w=1200&q=85"
               alt="Transaksi digital dan pembayaran online"
               className="relative h-[400px] w-full rounded border object-cover shadow-2xl shadow-black/15"
             />
